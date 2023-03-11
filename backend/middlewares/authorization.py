@@ -1,5 +1,5 @@
 import json
-from http.client import HTTPResponse
+from django.http import HttpResponse
 from django.utils.deprecation import MiddlewareMixin
 from backend.services.login_manager import (
     validate_token,
@@ -10,7 +10,7 @@ from backend.services.login_manager import (
 
 class CustomAuthorization(MiddlewareMixin):
     def reject(self, code: str, status: int = 401):
-        return HTTPResponse(
+        return HttpResponse(
             content=json.dumps({"code": code}),
             status=status,
             content_type="application/json",
@@ -25,6 +25,8 @@ class CustomAuthorization(MiddlewareMixin):
             return
         if token:
             session = validate_token(token=token)
+            if not session:
+                return self.reject(code="unauthtenticated", status=401)
             request.customer = session.user
             request.session_obj = session
         else:

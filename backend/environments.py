@@ -1,7 +1,7 @@
 from os import getenv
 
 PLATFORM = getenv("PLATFORM", "local")
-API_HOST = getenv("API_HOST", "127.0.0.1:8000")
+API_HOST = getenv("API_HOST", "127.0.0.1")
 SWAGGER_URL = getenv("SWAGGER_URL", "http://127.0.0.1:8000")
 BOT_TOKEN = getenv("BOT_TOKEN", "")
 PROJECT_SECRET_KEY = getenv(

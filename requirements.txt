@@ -2,7 +2,7 @@
 cryptography==39.0.1
 
 #django ver
-Django==4.0.9
+Django==3.2.18
 
 #celery
 celery==5.2.7
