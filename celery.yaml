@@ -1,0 +1,54 @@
+version: "3.3"
+
+services:
+  celery-main:
+    container_name: celery-main
+    build:
+      context: "."
+      dockerfile: ./Dockerfile
+    restart: always
+    environment:
+      PLATFORM: "production"
+      SWAGGER_URL: "https://healthcheck.alinance.ir"
+      API_HOST: "healthcheck.alinance.ir"
+      BACKEND_REDIS_HOST: "redis-backend"
+      BACKEND_POSTGRES_HOST: "postgres-backend"
+      BACKEND_POSTGRES_NAME: "postgres"
+      BACKEND_POSTGRES_USERNAME: "postgres"
+      BACKEND_POSTGRES_PASSWORD: "postgres"
+    command: celery -A backend worker -l info -c 2 -Q main
+    networks:
+      - backend-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 5m
+
+  celery-beat:
+    container_name: celery-beat
+    build:
+      context: "."
+      dockerfile: ./Dockerfile
+    restart: always
+    environment:
+      PLATFORM: "production"
+      SWAGGER_URL: "https://healthcheck.alinance.ir"
+      API_HOST: "healthcheck.alinance.ir"
+      BACKEND_REDIS_HOST: "redis-backend"
+      BACKEND_POSTGRES_HOST: "postgres-backend"
+      BACKEND_POSTGRES_NAME: "postgres"
+      BACKEND_POSTGRES_USERNAME: "postgres"
+      BACKEND_POSTGRES_PASSWORD: "postgres"
+    command: celery -A backend beat -l info
+    depends_on:
+      - celery-main
+    networks:
+      - backend-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 5m
+
+networks:
+  backend-network:
+    external: True
