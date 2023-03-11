@@ -15,6 +15,7 @@ from backend.environments import (
     REDIS_CELERY_BROKER,
     REDIS_DEFAULT,
     REDIS_RATELIMIT,
+    REDIS_TRY_RATE,
     SWAGGER_URL,
     PROJECT_SECRET_KEY,
 )
@@ -41,10 +42,11 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "backend.middlewares.common.CommonMiddleware",
     "backend.middlewares.authorization.CustomAuthorization",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 ROOT_URLCONF = "backend.urls"
@@ -96,6 +98,13 @@ CACHES = {
     "cache_lock": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": f"redis://{BACKEND_REDIS_HOST}:{BACKEND_REDIS_PORT}/{REDIS_CACHE_LOCK}",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
+    "try_rate": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{BACKEND_REDIS_HOST}:{BACKEND_REDIS_PORT}/{REDIS_TRY_RATE}",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
@@ -161,3 +170,9 @@ LOGGING = {
         "django": {"handlers": ["console"], "level": "INFO"},
     },
 }
+
+REQUEST_RATE_1MIN = 100
+REQUEST_RATE_15MIN = 500
+REQUEST_RATE_1HOUR = 1000
+REQUEST_BLOCK_RATE = 100
+CDN_BLOCKING_RATE = 100
