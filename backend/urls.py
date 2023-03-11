@@ -12,8 +12,8 @@ def return_static(request, path, insecure=True, **kwargs):
 
 
 urlpatterns = [
-    path("", include("adminstration.urls")),
-    path("telegram/", include("user.urls", namespace="secret")),
+    path("user/", include("user.urls")),
+    # path("telegram/", include("user.urls", namespace="secret")),
 ]
 swagger_urls = [
     item
@@ -23,11 +23,11 @@ swagger_urls = [
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="VPN API",
+        title="HealthCheck API",
         default_version="v1.0",
-        description="VPN Backend",
+        description="HealthCheck Backend",
         contact=openapi.Contact(email="salar40340@gmail.com"),
-        license=openapi.License(name="VPN"),
+        license=openapi.License(name="MIT"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),

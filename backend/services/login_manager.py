@@ -1,7 +1,7 @@
 import base64, binascii, time, json, hmac
 from hashlib import sha3_512
 
-from user.models import Session, Service, ValidServiceIp
+from user.models import User, Session, Service, ValidServiceIp
 
 from backend.customs.queryset import get_object_or_none
 
@@ -10,8 +10,8 @@ def calculate_signature(payload: str, key: str):
     return hmac.new(key.encode(), payload.encode(), sha3_512).hexdigest()
 
 
-def login(admin: object):
-    session = Session.objects.create(admin=admin)
+def login(user: User):
+    session = Session.objects.create(user=user)
     login_data = {"session_id": session.id, "timevalid": session.valid_time}
     payload = base64.b64encode(json.dumps(login_data).encode()).decode()
     signature = calculate_signature(payload=payload, key=session.key)
