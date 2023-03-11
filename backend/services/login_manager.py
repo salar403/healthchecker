@@ -1,7 +1,7 @@
 import base64, binascii, time, json, hmac
 from hashlib import sha3_512
 
-from user.models import Session, Service
+from user.models import Session, Service, ValidServiceIp
 
 from backend.customs.queryset import get_object_or_none
 
@@ -51,3 +51,9 @@ def validate_token(token: str):
 def validate_api_key(api_key: str):
     key_hash = sha3_512(api_key.encode()).hexdigest()
     return get_object_or_none(Service, api_key_hash=key_hash)
+
+
+def service_ip_is_valid(service: Service, ip: str):
+    return ValidServiceIp.objects.filter(
+        service_id=service.id, ip=ip, is_active=True
+    ).exists()

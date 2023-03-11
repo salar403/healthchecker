@@ -1,7 +1,11 @@
 import json
 from http.client import HTTPResponse
 from django.utils.deprecation import MiddlewareMixin
-from backend.services.login_manager import validate_token, validate_api_key
+from backend.services.login_manager import (
+    validate_token,
+    validate_api_key,
+    service_ip_is_valid,
+)
 
 
 class CustomAuthorization(MiddlewareMixin):
@@ -25,4 +29,6 @@ class CustomAuthorization(MiddlewareMixin):
             request.session_obj = session
         else:
             service = validate_api_key(api_key=key)
-            request.service = service
+            if service_ip_is_valid(service=service, ip=request.ip):
+                request.service = service
+            return self.reject(code="invalid_ip", status=412)
