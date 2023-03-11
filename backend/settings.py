@@ -1,8 +1,26 @@
 from pathlib import Path
 
-from backend.environments import API_HOST, PLATFORM, SWAGGER_URL, SECRET_KEY
+from backend.environments import (
+    API_HOST,
+    BACKEND_POSTGRES_HOST,
+    BACKEND_POSTGRES_NAME,
+    BACKEND_POSTGRES_PASSWORD,
+    BACKEND_POSTGRES_PORT,
+    BACKEND_POSTGRES_USERNAME,
+    BACKEND_REDIS_HOST,
+    BACKEND_REDIS_PORT,
+    PLATFORM,
+    REDIS_CACHE_LOCK,
+    REDIS_CELERY_BACKEND,
+    REDIS_CELERY_BROKER,
+    REDIS_DEFAULT,
+    REDIS_RATELIMIT,
+    SWAGGER_URL,
+    PROJECT_SECRET_KEY,
+)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+SECRET_KEY = PROJECT_SECRET_KEY
 
 DEBUG = bool(PLATFORM != "production")
 
@@ -15,7 +33,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_yasg",
     "corsheaders",
-    'django_toosimple_q',
+    "django_toosimple_q",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.staticfiles",
@@ -47,14 +65,51 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "backend.wsgi.application"
+ASGI_APPLICATION = "backend.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db/db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": BACKEND_POSTGRES_NAME,
+        "USER": BACKEND_POSTGRES_USERNAME,
+        "PASSWORD": BACKEND_POSTGRES_PASSWORD,
+        "HOST": BACKEND_POSTGRES_HOST,
+        "PORT": BACKEND_POSTGRES_PORT,
     }
 }
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{BACKEND_REDIS_HOST}:{BACKEND_REDIS_PORT}/{REDIS_DEFAULT}",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
+    "ratelimit": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{BACKEND_REDIS_HOST}:{BACKEND_REDIS_PORT}/{REDIS_RATELIMIT}",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
+    "cache_lock": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{BACKEND_REDIS_HOST}:{BACKEND_REDIS_PORT}/{REDIS_CACHE_LOCK}",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
+}
+
+CELERY_BROKER_URL = (
+    f"redis://{BACKEND_REDIS_HOST}:{BACKEND_REDIS_PORT}/{REDIS_CELERY_BROKER}"
+)
+CELERY_RESULT_BACKEND = (
+    f"redis://{BACKEND_REDIS_HOST}:{BACKEND_REDIS_PORT}/{REDIS_CELERY_BACKEND}"
+)
+CELERY_BROKER_TRANSPORT_OPTIONS = {"visibility_timeout": 31540000}
+CELERY_CREATE_MISSING_QUEUES = True
 
 AUTH_PASSWORD_VALIDATORS = [
     {
