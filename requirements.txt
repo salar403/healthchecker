@@ -1,0 +1,14 @@
+#django ver
+Django==3.2.14
+
+#django utilities
+django-cors-headers==3.13.0
+djangorestframework==3.13.1
+django-toosimple-q==0.4.0
+uvicorn==0.18.2
+
+#swagger
+drf-yasg==1.20.0
+
+#telegram
+python-telegram-bot==13.13
