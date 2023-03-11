@@ -1,5 +1,11 @@
+#security & encryption
+cryptography==39.0.1
+
 #django ver
-Django==3.2.14
+Django==4.0.9
+
+#celery
+celery==5.2.7
 
 #django utilities
 django-cors-headers==3.13.0
@@ -12,3 +18,12 @@ drf-yasg==1.20.0
 
 #telegram
 python-telegram-bot==13.13
+
+#outbounds
+requests==2.28.1
+
+#redis
+django-redis==5.2.0
+
+#postgres
+psycopg2-binary==2.9.3
