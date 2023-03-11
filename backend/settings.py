@@ -1,10 +1,8 @@
 from pathlib import Path
 
-from backend.environments import API_HOST, PLATFORM, SWAGGER_URL
+from backend.environments import API_HOST, PLATFORM, SWAGGER_URL, SECRET_KEY
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-SECRET_KEY = "django-insecure-w009)3tg7g**m=)v3%op^)6m3wx0a#hw0-7dff$%-_l*w%68wf"
 
 DEBUG = bool(PLATFORM != "production")
 
