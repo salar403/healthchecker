@@ -7,7 +7,7 @@ from backend.customs.views import (
 
 from drf_yasg.utils import swagger_auto_schema
 
-from user.serializers import UserLoginSerializer
+from user.serializers import UserLoginSerializer, AddServiceSerizlier
 from user.permissions import IsAuthenticated
 from backend.environments import API_HOST
 
@@ -38,3 +38,9 @@ class UserLogout(APIView):
         request.session_obj.is_active = False
         request.session_obj.save()
         return Response(data={"code": "success"}, status=status.HTTP_204_NO_CONTENT)
+
+
+class AddService(CreateApiView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = AddServiceSerizlier
+    context_map = {"user": "customer"}

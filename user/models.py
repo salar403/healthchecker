@@ -59,6 +59,7 @@ class Service(models.Model):
         on_delete=models.CASCADE,
         null=False,
     )
+    name = models.CharField(max_length=100)
     api_key_hash = models.CharField(max_length=500, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -66,7 +67,8 @@ class Service(models.Model):
 
 class ValidServiceIp(models.Model):
     class Meta:
-        unique_together = ("ip","service")
+        unique_together = ("ip", "service")
+
     ip = models.GenericIPAddressField(null=False)
     service = models.ForeignKey(
         to=Service,

@@ -1,8 +1,9 @@
 from rest_framework import serializers
 
 from backend.customs.exceptions import CustomException
+from backend.customs.generators import generate_api_key
 
-from user.models import User
+from user.models import User, Service
 from backend.services.login_manager import login
 
 
@@ -21,3 +22,31 @@ class UserLoginSerializer(serializers.Serializer):
     def create(self, validated_data):
         self._data = {"code": "success", "token": login(user=self.user)}
         return True
+
+
+class ServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ["id", "name", "is_active", "created_at"]
+        model = Service
+
+
+class AddServiceSerizlier(serializers.Serializer):
+    name = serializers.CharField(required=True)
+
+    def validate_name(self, name):
+        user = self.context["user"]
+        if user.services.filter(is_active=True, name=name).exists():
+            raise CustomException(code="duplicated_service_name")
+        return name
+
+    def create(self, validated_data):
+        service = Service.objects.create(
+            user=self.context["user"], name=validated_data["name"]
+        )
+        api_key, api_key_hash = generate_api_key()
+        service.api_key_hash = api_key_hash
+        service.save()
+        data = ServiceSerializer(service).data
+        data["api_key"] = api_key
+        self._data = {"code": "success", "data": data}
+        return super().create(validated_data)
