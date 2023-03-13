@@ -1,5 +1,6 @@
 from django.db import models
 from unixtimestampfield.fields import UnixTimeStampField
+from backend.customs.generators import current_int_timestamp
 
 from user.models import User
 
@@ -34,6 +35,8 @@ class Endpoint(models.Model):
     check_result_data = models.BooleanField(default=False)
     timeout = models.IntegerField(null=False)
     check_interval = models.IntegerField(null=False)
+    recall_at = models.IntegerField(default=current_int_timestamp)
+    convert_body_to_json = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)

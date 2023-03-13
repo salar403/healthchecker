@@ -27,3 +27,7 @@ def generate_api_key():
     key = secrets.token_urlsafe(40)
     key_hash = sha3_512(key.encode()).hexdigest()
     return key, key_hash
+
+
+def current_int_timestamp():
+    return int(time.time())
