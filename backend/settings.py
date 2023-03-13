@@ -30,14 +30,14 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True
 
 INSTALLED_APPS = [
-    "user",
     "rest_framework",
     "drf_yasg",
     "corsheaders",
-    "django_toosimple_q",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.staticfiles",
+    "user",
+    "monitoring",
 ]
 
 MIDDLEWARE = [
