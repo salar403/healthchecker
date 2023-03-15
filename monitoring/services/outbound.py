@@ -1,3 +1,4 @@
+import time
 from monitoring.models import Endpoint, CallResult
 from backend.customs.outbounds import send
 
@@ -32,3 +33,5 @@ def call_endpoint(endpoint_id: int):
             else:
                 call_result["state"] = CallResult.INVALID_STATUS
     CallResult.objects.create(**call_result)
+    endpoint.recall_at = int(time.time() + endpoint.check_interval)
+    endpoint.save()
