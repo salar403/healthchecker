@@ -47,14 +47,12 @@ class CallResult(models.Model):
     TIMEOUT = 2
     INVALID_STATUS = 3
     ERROR = 4
-    UNMATCH_DATA = 5
 
     STATES = [
         (SUCCESS, "success"),
         (TIMEOUT, "timeout"),
         (INVALID_STATUS, "invalid_status"),
         (ERROR, "error"),
-        (UNMATCH_DATA, "unmatch_data"),
     ]
 
     endpoint = models.ForeignKey(

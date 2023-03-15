@@ -17,6 +17,9 @@ def send(
     raise_if_fail: bool = False,
 ):
     starting_time = int(time.time() * 1000)
+    error = False
+    success = True
+    timeout = False
     try:
         if convert_body_to_json:
             body = json.dumps(body)
@@ -30,25 +33,34 @@ def send(
             verify=verify,
             proxies=proxies,
         )
-    except Exception as error:
+    except Exception as e:
         ending_time = int(time.time() * 1000)
         elapsed_time = ending_time - starting_time
-        status = False
-        final = str(error)
+        success = False
+        error = True
+        final = str(e)
         code = 0
+        if isinstance(e, requests.exceptions.ConnectTimeout):
+            timeout = True
     else:
         elapsed_time = int(response.elapsed.microseconds / 1000)
-        if response.status_code == good_status_code:
-            code = good_status_code
-            status = True
+        code = response.status_code
+        if code == good_status_code:
             if parse_to_json:
                 final = response.json()
             else:
                 final = response.text
         else:
-            status = False
+            success = False
             code = response.status_code
             final = response.text
-    if raise_if_fail and not status:
+    if raise_if_fail and not success:
         raise FailedRequestException(detail=final)
-    return {"success": status, "response": final, "code": code, "elapsed": elapsed_time}
+    return {
+        "success": success,
+        "error": error,
+        "response": final,
+        "code": code,
+        "elapsed": elapsed_time,
+        "timed_out": timeout,
+    }
