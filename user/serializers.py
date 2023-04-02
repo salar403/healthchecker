@@ -1,7 +1,10 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from backend.customs.exceptions import CustomException
 from backend.customs.generators import generate_api_key
+from backend.customs.serializers import PaginatedTimeFilteredSerializer
+from backend.customs.queryset import get_object_or_none
 
 from user.models import User, Service
 from backend.services.login_manager import login
@@ -50,3 +53,33 @@ class AddServiceSerizlier(serializers.Serializer):
         data["api_key"] = api_key
         self._data = {"code": "success", "data": data}
         return super().create(validated_data)
+
+
+class ServiceModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = ["id", "name", "is_active", "created_at"]
+
+
+class ListServiceSerializer(PaginatedTimeFilteredSerializer):
+    MODEL_SERIALIZER = ServiceModelSerializer
+    ORDER_BY = "id"
+
+    def get_queryset(self, filters: dict):
+        return self.context["user"].services.filter(**filters).order_by(self.ORDER_BY)
+
+
+class DeleteServiceSerializer(serializers.Serializer):
+    service_id = serializers.IntegerField(required=True, min_value=1)
+
+    def validate_service_id(self, service_id):
+        return get_object_or_404(
+            self.context["user"].services, id=service_id, is_active=True
+        )
+
+    def create(self, validated_data):
+        service = validated_data["service_id"]
+        service.is_active = False
+        service.save()
+        self._data = {"code": "success"}
+        return True

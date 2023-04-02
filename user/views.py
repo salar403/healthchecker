@@ -1,5 +1,7 @@
 from backend.customs.views import (
     CreateApiView,
+    DestroyApiView,
+    RetrieveApiView,
     APIView,
     Response,
     status,
@@ -7,7 +9,12 @@ from backend.customs.views import (
 
 from drf_yasg.utils import swagger_auto_schema
 
-from user.serializers import UserLoginSerializer, AddServiceSerizlier
+from user.serializers import (
+    DeleteServiceSerializer,
+    ListServiceSerializer,
+    UserLoginSerializer,
+    AddServiceSerizlier,
+)
 from user.permissions import IsAuthenticated
 from backend.environments import API_HOST
 
@@ -44,3 +51,22 @@ class AddService(CreateApiView):
     permission_classes = [IsAuthenticated]
     serializer_class = AddServiceSerizlier
     context_map = {"user": "customer"}
+
+
+class ListServices(RetrieveApiView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ListServiceSerializer
+    context_map = {"user": "customer"}
+
+    @swagger_auto_schema(query_serializer=serializer_class)
+    def get(self, request):
+        return super().get(request)
+
+
+class DeleteService(DestroyApiView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = DeleteServiceSerializer
+
+    @swagger_auto_schema(request_body=serializer_class)
+    def delete(self, request):
+        return super().delete(request)
