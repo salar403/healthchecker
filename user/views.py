@@ -66,6 +66,7 @@ class ListServices(RetrieveApiView):
 class DeleteService(DestroyApiView):
     permission_classes = [IsAuthenticated]
     serializer_class = DeleteServiceSerializer
+    context_map = {"user": "customer"}
 
     @swagger_auto_schema(request_body=serializer_class)
     def delete(self, request):

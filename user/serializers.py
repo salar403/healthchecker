@@ -1,10 +1,9 @@
-from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from backend.customs.exceptions import CustomException
 from backend.customs.generators import generate_api_key
 from backend.customs.serializers import PaginatedTimeFilteredSerializer
-from backend.customs.queryset import get_object_or_none
+from backend.customs.queryset import get_object_or_404
 
 from user.models import User, Service
 from backend.services.login_manager import login
