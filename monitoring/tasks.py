@@ -6,7 +6,7 @@ from .services.outbound import call_endpoint
 
 
 @shared_task(queue="outbound")
-def call_async_endpoint(endpoint_id: int):
+def call_endpoint_task(endpoint_id: int):
     call_endpoint(endpoint_id=endpoint_id)
 
 
@@ -15,4 +15,4 @@ def check_for_intervals():
     for endpoint in Endpoint.objects.filter(
         is_deleted=False, recall_at__lte=time.time()
     ):
-        call_async_endpoint.apply_async(kwargs={"endpoint_id": endpoint.id})
+        call_endpoint_task.apply_async(kwargs={"endpoint_id": endpoint.id})

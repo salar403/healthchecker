@@ -4,8 +4,10 @@ from drf_yasg.utils import swagger_auto_schema
 from user.permissions import IsAuthenticated
 from .serializers import (
     AddEndpointSerizlier,
+    HistoricalStateSerializer,
     ListEndpointSerializer,
     DeleteEndpointSerializer,
+    LiveStateSerializer,
 )
 
 
@@ -33,3 +35,23 @@ class DeleteEndpoint(DestroyApiView):
     @swagger_auto_schema(request_body=serializer_class)
     def delete(self, request):
         return super().delete(request)
+
+
+class LiveStates(RetrieveApiView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = LiveStateSerializer
+    context_map = {"user": "customer"}
+
+    @swagger_auto_schema(query_serializer=serializer_class)
+    def get(self, request):
+        return super().get(request)
+
+
+class HistoricalStates(RetrieveApiView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = HistoricalStateSerializer
+    context_map = {"user": "customer"}
+
+    @swagger_auto_schema(query_serializer=serializer_class)
+    def get(self, request):
+        return super().get(request)

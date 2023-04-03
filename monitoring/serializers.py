@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from backend.customs.queryset import get_object_or_404
 
-from backend.customs.serializers import PaginatedTimeFilteredSerializer
-from backend.customs.exceptions import CustomException
+from backend.customs.serializers import (
+    PaginatedTimeFilteredSerializer,
+    PaginatedSerializer,
+)
 
-from .models import Endpoint
+from .models import CallResult, Endpoint
 
 
 class EndpointModelSerializer(serializers.ModelSerializer):
@@ -60,3 +62,54 @@ class DeleteEndpointSerializer(serializers.Serializer):
         endpoint.save()
         self._data = {"code": "success"}
         return True
+
+
+class StateModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CallResult
+        fields = ["healthy", "timestamp"]
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret["endpoint_id"] = instance.endpoint.id
+        ret["endpoint_name"] = instance.endpoint.name
+        return ret
+
+
+class LiveEndpointStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Endpoint
+        fields = ["id", "name"]
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        last_call_result = instance.callresults.last()
+        ret["last_state"] = last_call_result.healthy
+        ret["last_timestamp"] = last_call_result.timestamp
+        return ret
+
+
+class LiveStateSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        super().to_representation(instance)
+        endpoints = self.context["user"].endpoints.filter(is_deleted=False)
+        return {
+            "code": "success",
+            "data": LiveEndpointStateSerializer(endpoints, many=True).data,
+        }
+
+
+class HistoricalStateSerializer(PaginatedSerializer):
+    MODEL_SERIALIZER = StateModelSerializer
+    ORDER_BY = "id"
+
+    endpoint_id = serializers.IntegerField(required=True, min_value=1)
+
+    def validate_endpoint_id(self, endpoint_id):
+        self._endpoint = get_object_or_404(
+            self.context["user"].endpoints, id=endpoint_id, is_deleted=False
+        )
+        return self._endpoint
+
+    def get_queryset(self, filters: dict):
+        return self._endpoint.call_results.filter(**filters).order_by(self.ORDER_BY)
