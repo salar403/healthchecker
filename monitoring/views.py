@@ -1,7 +1,7 @@
 from backend.customs.views import CreateApiView, RetrieveApiView, DestroyApiView
 from drf_yasg.utils import swagger_auto_schema
 
-from user.permissions import IsAuthenticated
+from user.permissions import IsAuthenticated, IsUserOrServiceAuthtenticated
 from .serializers import (
     AddEndpointSerizlier,
     CallResultSerializer,
@@ -19,7 +19,7 @@ class AddEndpoint(CreateApiView):
 
 
 class ListEndpoints(RetrieveApiView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsUserOrServiceAuthtenticated]
     serializer_class = ListEndpointSerializer
     context_map = {"user": "customer"}
 
@@ -39,7 +39,7 @@ class DeleteEndpoint(DestroyApiView):
 
 
 class LiveStates(RetrieveApiView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsUserOrServiceAuthtenticated]
     serializer_class = LiveStateSerializer
     context_map = {"user": "customer"}
 
@@ -49,7 +49,7 @@ class LiveStates(RetrieveApiView):
 
 
 class HistoricalStates(RetrieveApiView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsUserOrServiceAuthtenticated]
     serializer_class = HistoricalStateSerializer
     context_map = {"user": "customer"}
 
@@ -59,7 +59,7 @@ class HistoricalStates(RetrieveApiView):
 
 
 class CallResults(RetrieveApiView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsUserOrServiceAuthtenticated]
     serializer_class = CallResultSerializer
     context_map = {"user": "customer"}
 

@@ -18,3 +18,16 @@ class IsServiceAuthtenticated(BasePermission):
         if not service or not isinstance(service, Service) or not service.is_active:
             raise CustomException(code="unauthtenticated", status_code=401)
         return True
+
+
+class IsUserOrServiceAuthtenticated(BasePermission):
+    def has_permission(self, request, view):
+        user = getattr(request, "customer", None)
+        service = getattr(request, "service", None)
+        if not user and not service:
+            raise CustomException(code="unauthtenticated", status_code=401)
+        if user and (not isinstance(user, User) or not user.is_active):
+            raise CustomException(code="unauthtenticated", status_code=401)
+        if service and (not isinstance(service, Service) or not service.is_active):
+            raise CustomException(code="unauthtenticated", status_code=401)
+        return True
