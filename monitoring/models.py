@@ -1,5 +1,4 @@
 from django.db import models
-from unixtimestampfield.fields import UnixTimeStampField
 from backend.customs.generators import current_int_timestamp
 
 from user.models import User
@@ -61,10 +60,10 @@ class CallResult(models.Model):
         related_name="call_results",
         null=False,
     )
-    timestamp = UnixTimeStampField(auto_now_add=True)
+    timestamp = models.IntegerField(default=current_int_timestamp)
     response_time_ms = models.IntegerField(null=False)
     status_code = models.IntegerField(null=False)
     state = models.IntegerField(choices=STATES)
     healthy = models.BooleanField(null=False)
-    error = models.TextField(default=None)
-    result_json = models.JSONField(default=None)
+    error = models.TextField(null=True)
+    result_json = models.JSONField(null=True)
