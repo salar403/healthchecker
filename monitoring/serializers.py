@@ -58,7 +58,7 @@ class DeleteEndpointSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         endpoint = validated_data["endpoint_id"]
-        endpoint.is_active = False
+        endpoint.is_deleted = True
         endpoint.save()
         self._data = {"code": "success"}
         return True
