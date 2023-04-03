@@ -7,6 +7,7 @@ urlpatterns = [
     path("endpoint/delete/", views.DeleteEndpoint.as_view(), name="delete_endpoint"),
     path("healthstate/live/", views.LiveStates.as_view(), name="live_healthstates"),
     path("healthstate/historical/", views.HistoricalStates.as_view(), name="historical_healthstates"),
+    path("endpoint/callresults/", views.CallResults.as_view(), name="callResults"),
 ]
 
     

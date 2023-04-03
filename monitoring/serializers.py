@@ -129,3 +129,25 @@ class HistoricalStateSerializer(PaginatedSerializer):
 
     def get_queryset(self, filters: dict):
         return self._endpoint.call_results.filter(**filters).order_by(self.ORDER_BY)
+
+
+class CallResultModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CallResult
+        fields = "__all__"
+
+
+class CallResultSerializer(PaginatedSerializer):
+    MODEL_SERIALIZER = CallResultModelSerializer
+    ORDER_BY = "id"
+
+    endpoint_id = serializers.IntegerField(required=True, min_value=1)
+
+    def validate_endpoint_id(self, endpoint_id):
+        self._endpoint = get_object_or_404(
+            self.context["user"].endpoints, id=endpoint_id, is_deleted=False
+        )
+        return self._endpoint
+
+    def get_queryset(self, filters: dict):
+        return self._endpoint.call_results.filter(**filters).order_by(self.ORDER_BY)

@@ -4,6 +4,7 @@ from drf_yasg.utils import swagger_auto_schema
 from user.permissions import IsAuthenticated
 from .serializers import (
     AddEndpointSerizlier,
+    CallResultSerializer,
     HistoricalStateSerializer,
     ListEndpointSerializer,
     DeleteEndpointSerializer,
@@ -50,6 +51,16 @@ class LiveStates(RetrieveApiView):
 class HistoricalStates(RetrieveApiView):
     permission_classes = [IsAuthenticated]
     serializer_class = HistoricalStateSerializer
+    context_map = {"user": "customer"}
+
+    @swagger_auto_schema(query_serializer=serializer_class)
+    def get(self, request):
+        return super().get(request)
+
+
+class CallResults(RetrieveApiView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CallResultSerializer
     context_map = {"user": "customer"}
 
     @swagger_auto_schema(query_serializer=serializer_class)
