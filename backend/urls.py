@@ -13,6 +13,7 @@ def return_static(request, path, insecure=True, **kwargs):
 
 urlpatterns = [
     path("user/", include("user.urls")),
+    path("monitoring/", include("monitoring.urls")),
     # path("telegram/", include("user.urls", namespace="secret")),
 ]
 swagger_urls = [
