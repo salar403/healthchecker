@@ -16,7 +16,7 @@ services:
       BACKEND_POSTGRES_NAME: "postgres"
       BACKEND_POSTGRES_USERNAME: "postgres"
       BACKEND_POSTGRES_PASSWORD: "postgres"
-    command: bash -c "python3 manage.py migrate && python3 manage.py check_starting_data && uvicorn backend.asgi:application --host 0.0.0.0 --port 8080 --workers 2"
+    command: bash -c "./manage.py migrate && uvicorn backend.asgi:application --host 0.0.0.0 --port 8080 --workers 2"
     networks:
       - backend-network
     logging:
