@@ -78,7 +78,7 @@ class RetrieveApiView(APIView):
 
     def get(self, request):
         serializer = self.get_serializer(
-            data=request.query_patams,
+            data=request.query_params,
             context=self.get_context(),
         )
         serializer.is_valid(raise_exception=True)

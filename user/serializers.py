@@ -51,7 +51,7 @@ class AddServiceSerizlier(serializers.Serializer):
         data = ServiceSerializer(service).data
         data["api_key"] = api_key
         self._data = {"code": "success", "data": data}
-        return super().create(validated_data)
+        return True
 
 
 class ServiceModelSerializer(serializers.ModelSerializer):

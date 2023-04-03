@@ -1,5 +1,5 @@
 from celery import shared_task
-from time import time
+import time
 
 from .models import Endpoint
 from .services.outbound import call_endpoint

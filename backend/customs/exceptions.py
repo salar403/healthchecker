@@ -20,3 +20,7 @@ class CustomException(APIException):
             self.detail = {"code": code, "message": detail}
         else:
             self.detail = {"code": code}
+
+
+class FailedRequestException(CustomException):
+    default_code = "failed_request"
