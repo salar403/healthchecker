@@ -9,8 +9,8 @@ services:
     restart: always
     environment:
       PLATFORM: "production"
-      SWAGGER_URL: "https://healthcheck.alinance.ir"
-      API_HOST: "healthcheck.alinance.ir"
+      SWAGGER_URL: "https://healthcheck.abantechnical.ir"
+      API_HOST: "healthcheck.abantechnical.ir"
       BACKEND_REDIS_HOST: "redis-backend"
       BACKEND_POSTGRES_HOST: "postgres-backend"
       BACKEND_POSTGRES_NAME: "postgres"
@@ -32,8 +32,8 @@ services:
     restart: always
     environment:
       PLATFORM: "production"
-      SWAGGER_URL: "https://healthcheck.alinance.ir"
-      API_HOST: "healthcheck.alinance.ir"
+      SWAGGER_URL: "https://healthcheck.abantechnical.ir"
+      API_HOST: "healthcheck.abantechnical.ir"
       BACKEND_REDIS_HOST: "redis-backend"
       BACKEND_POSTGRES_HOST: "postgres-backend"
       BACKEND_POSTGRES_NAME: "postgres"
@@ -55,8 +55,8 @@ services:
     restart: always
     environment:
       PLATFORM: "production"
-      SWAGGER_URL: "https://healthcheck.alinance.ir"
-      API_HOST: "healthcheck.alinance.ir"
+      SWAGGER_URL: "https://healthcheck.abantechnical.ir"
+      API_HOST: "healthcheck.abantechnical.ir"
       BACKEND_REDIS_HOST: "redis-backend"
       BACKEND_POSTGRES_HOST: "postgres-backend"
       BACKEND_POSTGRES_NAME: "postgres"
@@ -78,8 +78,8 @@ services:
     restart: always
     environment:
       PLATFORM: "production"
-      SWAGGER_URL: "https://healthcheck.alinance.ir"
-      API_HOST: "healthcheck.alinance.ir"
+      SWAGGER_URL: "https://healthcheck.abantechnical.ir"
+      API_HOST: "healthcheck.abantechnical.ir"
       BACKEND_REDIS_HOST: "redis-backend"
       BACKEND_POSTGRES_HOST: "postgres-backend"
       BACKEND_POSTGRES_NAME: "postgres"
