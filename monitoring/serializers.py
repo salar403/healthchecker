@@ -105,6 +105,7 @@ class LiveEndpointStateSerializer(serializers.ModelSerializer):
             return
         ret["last_state"] = last_call_result.healthy
         ret["last_timestamp"] = last_call_result.timestamp
+        return ret
 
 
 class LiveStateSerializer(serializers.Serializer):
