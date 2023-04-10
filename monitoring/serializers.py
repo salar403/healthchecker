@@ -20,6 +20,7 @@ class AddEndpointSerizlier(serializers.Serializer):
     name = serializers.CharField(required=True)
     base_url = serializers.URLField(required=True)
     method = serializers.CharField(required=True)
+    response_type = serializers.CharField(required=True)
     timeout = serializers.IntegerField(required=True, min_value=0)
     check_interval = serializers.IntegerField(required=True, min_value=1)
     convert_body_to_json = serializers.BooleanField(allow_null=False, default=False)
@@ -34,6 +35,12 @@ class AddEndpointSerizlier(serializers.Serializer):
         if method.lower() not in methods:
             raise CustomException(code="invalid_method")
         return methods[method.lower()]
+
+    def validate_response_type(self, response_type):
+        response_types = dict(map(reversed, dict(Endpoint.VALID_TYPES).items()))
+        if response_type.lower() not in response_types:
+            raise CustomException(code="invalid_response_type")
+        return response_types[response_type.lower()]
 
     def validate(self, data):
         for key in list(data):
