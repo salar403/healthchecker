@@ -13,9 +13,7 @@ def call_endpoint(endpoint_id: int):
         headers=endpoint.headers,
         body=endpoint.body,
         convert_body_to_json=endpoint.convert_body_to_json,
-        parse_to_json=True
-        if endpoint.response_type in [Endpoint.JSON, Endpoint.ALL]
-        else False,
+        parse_to_json=True if endpoint.response_type == Endpoint.JSON else False,
     )
     call_result = {
         "endpoint_id": endpoint.id,
