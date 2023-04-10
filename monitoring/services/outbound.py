@@ -13,6 +13,9 @@ def call_endpoint(endpoint_id: int):
         headers=endpoint.headers,
         body=endpoint.body,
         convert_body_to_json=endpoint.convert_body_to_json,
+        parse_to_json=True
+        if endpoint.response_type in [Endpoint.JSON, Endpoint.ALL]
+        else False,
     )
     call_result = {
         "endpoint_id": endpoint.id,
@@ -25,7 +28,10 @@ def call_endpoint(endpoint_id: int):
         call_result["state"] = CallResult.ERROR
     else:
         call_result["state"] = CallResult.SUCCESS
-        call_result["result_json"] = result["response"]
+        if endpoint.response_type in [Endpoint.JSON, Endpoint.ALL]:
+            call_result["result_text"] = result["response"]
+        else:
+            call_result["result_json"] = result["response"]
         call_result["healthy"] = result["success"]
         if not call_result["healthy"]:
             if result["timed_out"]:

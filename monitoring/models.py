@@ -17,6 +17,16 @@ class Endpoint(models.Model):
         (DELETE, "delete"),
     ]
 
+    TEXT = 1
+    JSON = 2
+    ALL = 3
+
+    VALID_TYPES = [
+        (TEXT, "text"),
+        (JSON, "json"),
+        (TEXT, "all"),
+    ]
+
     user = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
@@ -26,6 +36,7 @@ class Endpoint(models.Model):
     name = models.CharField(max_length=500)
     base_url = models.URLField(null=False)
     method = models.IntegerField(choices=METHODS, null=False)
+    response_type = models.IntegerField(choices=VALID_TYPES, default=JSON)
     headers = models.JSONField(null=True)
     body = models.JSONField(null=True)
     query_params = models.JSONField(null=True)
@@ -67,3 +78,4 @@ class CallResult(models.Model):
     healthy = models.BooleanField(null=False)
     error = models.TextField(null=True)
     result_json = models.JSONField(null=True)
+    result_text = models.TextField(null=True)
