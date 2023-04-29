@@ -31,6 +31,6 @@ class CustomAuthorization(MiddlewareMixin):
             request.session_obj = session
         else:
             service = validate_api_key(api_key=key)
-            if service_ip_is_valid(service=service, ip=request.ip):
-                request.service = service
-            return self.reject(code="invalid_ip", status=412)
+            if not service:
+                return self.reject(code="unauthtenticated", status=412)
+            request.service = service
