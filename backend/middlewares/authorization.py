@@ -18,7 +18,7 @@ class CustomAuthorization(MiddlewareMixin):
 
     def process_request(self, request):
         token = request.COOKIES.get("Bearer", None)
-        key = request.COOKIES.get("Api-Key", None)
+        key = request.headers.get("Api-Key", None)
         if token and key:
             return self.reject(code="invalid_input")
         if not token and not key:
