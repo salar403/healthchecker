@@ -21,7 +21,7 @@ class AddEndpoint(CreateApiView):
 class ListEndpoints(RetrieveApiView):
     permission_classes = [IsUserOrServiceAuthtenticated]
     serializer_class = ListEndpointSerializer
-    context_map = {"user": "customer"}
+    context_map = {"user": "customer", "service": "service"}
 
     @swagger_auto_schema(query_serializer=serializer_class)
     def get(self, request):
@@ -41,7 +41,7 @@ class DeleteEndpoint(DestroyApiView):
 class LiveStates(RetrieveApiView):
     permission_classes = [IsUserOrServiceAuthtenticated]
     serializer_class = LiveStateSerializer
-    context_map = {"user": "customer"}
+    context_map = {"user": "customer", "service": "service"}
 
     @swagger_auto_schema(query_serializer=serializer_class)
     def get(self, request):
@@ -51,7 +51,7 @@ class LiveStates(RetrieveApiView):
 class HistoricalStates(RetrieveApiView):
     permission_classes = [IsUserOrServiceAuthtenticated]
     serializer_class = HistoricalStateSerializer
-    context_map = {"user": "customer"}
+    context_map = {"user": "customer", "service": "service"}
 
     @swagger_auto_schema(query_serializer=serializer_class)
     def get(self, request):
@@ -61,7 +61,7 @@ class HistoricalStates(RetrieveApiView):
 class CallResults(RetrieveApiView):
     permission_classes = [IsUserOrServiceAuthtenticated]
     serializer_class = CallResultSerializer
-    context_map = {"user": "customer"}
+    context_map = {"user": "customer", "service": "service"}
 
     @swagger_auto_schema(query_serializer=serializer_class)
     def get(self, request):

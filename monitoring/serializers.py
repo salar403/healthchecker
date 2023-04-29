@@ -65,10 +65,11 @@ class ListEndpointSerializer(PaginatedTimeFilteredSerializer):
     ORDER_BY = "id"
 
     def get_queryset(self, filters: dict):
-        return (
-            self.context["user"]
-            .endpoints.filter(is_deleted=False, **filters)
-            .order_by(self.ORDER_BY)
+        user = self.context["user"]
+        if not user:
+            user = self.context["service"].user
+        return user.endpoints.filter(is_deleted=False, **filters).order_by(
+            self.ORDER_BY
         )
 
 
@@ -118,7 +119,10 @@ class LiveEndpointStateSerializer(serializers.ModelSerializer):
 class LiveStateSerializer(serializers.Serializer):
     def to_representation(self, instance):
         super().to_representation(instance)
-        endpoints = self.context["user"].endpoints.filter(is_deleted=False)
+        user = self.context["user"]
+        if not user:
+            user = self.context["service"].user
+        endpoints = user.endpoints.filter(is_deleted=False)
         states = filter(None, LiveEndpointStateSerializer(endpoints, many=True).data)
         return {"code": "success", "data": states}
 
@@ -130,8 +134,11 @@ class HistoricalStateSerializer(PaginatedSerializer):
     endpoint_id = serializers.IntegerField(required=True, min_value=1)
 
     def validate_endpoint_id(self, endpoint_id):
+        user = self.context["user"]
+        if not user:
+            user = self.context["service"].user
         self._endpoint = get_object_or_404(
-            self.context["user"].endpoints, id=endpoint_id, is_deleted=False
+            user.endpoints, id=endpoint_id, is_deleted=False
         )
         return self._endpoint
 
@@ -152,8 +159,11 @@ class CallResultSerializer(PaginatedSerializer):
     endpoint_id = serializers.IntegerField(required=True, min_value=1)
 
     def validate_endpoint_id(self, endpoint_id):
+        user = self.context["user"]
+        if not user:
+            user = self.context["service"].user
         self._endpoint = get_object_or_404(
-            self.context["user"].endpoints, id=endpoint_id, is_deleted=False
+            user.endpoints, id=endpoint_id, is_deleted=False
         )
         return self._endpoint
 

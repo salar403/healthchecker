@@ -66,7 +66,7 @@ class RetrieveApiView(APIView):
         context = {}
         for key in self.context_map:
             context[key] = (
-                getattr(self.request, self.context_map[key])
+                getattr(self.request, self.context_map[key], None)
                 if key != "request"
                 else self.request
             )
